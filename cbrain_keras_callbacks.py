@@ -11,11 +11,11 @@ from keras.callbacks import TensorBoard, EarlyStopping
 
 class CustomCallbacks:
     def __init__(self, config, log_dir):
-        self.tensorboard, self.earlystopping = self.main(config, log_dir)
+        self.callbacks = self.main(config, log_dir)
         return
 
     @staticmethod
-    def main(config: object, log_dir: str) -> (object, object):
+    def main(config: object, log_dir: str) -> list:
         # set up tensorboard visualization
         tensorboard = TensorBoard(
             log_dir=log_dir,
@@ -33,4 +33,4 @@ class CustomCallbacks:
             verbose=1,
             mode=config.mode)
 
-        return tensorboard, earlystopping
+        return [tensorboard, earlystopping]

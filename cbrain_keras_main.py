@@ -45,11 +45,8 @@ y_data = dataloader.y_data
 # =============================================================================
 print('Setting Parameters')
 
-nsamples = x_data.shape[0]  # currently, not used
-nlevels = x_data.shape[1]  # currently, not used
 hidden_lays = list(map(int, config.hidden_lays.split(',')))
 nhidden = len(hidden_lays)
-# random_seed = K.set_random_seed(config.random_seed) # see note at top of file
 
 # define data dims
 input_dim = x_data.shape[1]
@@ -62,20 +59,15 @@ print('Setting Up Metrics, Callbacks, and Optimizer')
 
 metrics = config.metrics.split(',')
 
-
 # add custom metric (same scalar that Pierre uses for "loss/logloss")
 def log10_loss(y_true, y_pred):
     reg_loss = K.sqrt(K.mean(K.square(y_true - y_pred), axis=-1))
     log_loss = K.log(reg_loss + 1e-20) / K.log(10.0)
     return log_loss
 
-
 metrics.append(log10_loss)
-
 log_dir = get_logdir(config)
-cbacks = CustomCallbacks(config, log_dir)
-callbacks = [cbacks.tensorboard, cbacks.earlystopping]
-
+callbacks = CustomCallbacks(config, log_dir).callbacks
 optimizer = Optimizer(config).optimizer
 
 # =============================================================================
@@ -109,6 +101,11 @@ model.compile(loss=config.loss_func,
               optimizer=optimizer,
               metrics=metrics)
 
+print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
+print(f'Hidden layer activation function is {config.hidden_lays_act}.')
+print(f'Output layer activation function is {config.output_lay_act}.')
+print(f'Optimizer is {config.optimizer}.')
+
 # =============================================================================
 # Train Model
 # =============================================================================
@@ -116,7 +113,7 @@ print('Training Model')
 
 # split data into training and test sets
 x_train, x_test, y_train, y_test = train_test_split(
-    x_data, y_data, test_size=config.frac_train)
+    x_data, y_data, test_size=config.frac_test)
 
 # train the model
 model.fit(x_train,

@@ -42,9 +42,9 @@ class Config:
         # Dummy data
         dum_arg = parser.add_argument_group('Dummy')
         dum_arg.add_argument('--dum_levels', type=int, default=21)
-        dum_arg.add_argument('--dum_mult', type=float, default=1e5)
+        dum_arg.add_argument('--dum_mult', type=float, default=1)
         dum_arg.add_argument('--dum_samples', type=int, default=int(1e6))
-        dum_arg.add_argument('--dum_var', type=float, default=1e3)
+        dum_arg.add_argument('--dum_var', type=float, default=0)
         dum_arg.add_argument('--use_dum_data_xy', type=bool, default=False)
         dum_arg.add_argument('--use_dum_data_y', type=bool, default=True)
 
@@ -57,12 +57,12 @@ class Config:
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='13',
+        net_arg.add_argument('--hidden_lays',  type=str, default='50',
                              help='comma separated list of hidden layers')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str,
                              default='mean_squared_error')
-        net_arg.add_argument('--output_lay_act',  type=str, default='linear')        
+        net_arg.add_argument('--output_lay_act',  type=str, default='linear')
         net_arg.add_argument('--use_dropout', type=bool, default=False)
         
         # Optimizer
@@ -73,7 +73,11 @@ class Config:
         optim_arg.add_argument('--epsilon', type=float, default=1e-8)
         optim_arg.add_argument('--lr', type=float, default=0.01)
         optim_arg.add_argument('--optimizer', type=str, default='adam')
-        
+        optim_arg.add_argument('--schedule_decay', type=float, default=0.004)
+        optim_arg.add_argument('--rho', type=float, default=0.95)
+        optim_arg.add_argument('--momentum', type=float, default=0.0)
+        optim_arg.add_argument('--nesterov', type=bool, default=False)
+
         # Tensorboard
         tboard_arg = parser.add_argument_group('Tensorboard')
         tboard_arg.add_argument('--histogram_freq', type=int, default=0)
@@ -83,9 +87,9 @@ class Config:
         
         # Training and testing
         train_arg = parser.add_argument_group('Training')
-        train_arg.add_argument('--batch_size', type=int, default=128)
+        train_arg.add_argument('--batch_size', type=int, default=50)
         train_arg.add_argument('--epochs', type=int, default=30)
-        train_arg.add_argument('--frac_train', type=float, default=0.25)
+        train_arg.add_argument('--frac_test', type=float, default=0.2)
         train_arg.add_argument('--shuffle', type=bool, default=True)
         train_arg.add_argument('--valid_split', type=float, default=0.1)
         

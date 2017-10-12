@@ -15,14 +15,13 @@ max_file = '../cbrain/SP-CAM/SPCAM_max.nc'
 
 
 def get_logdir(config: object) -> str:
-    logdir = "datetime_" + time.strftime("%Y%m%d") + "_" + time.strftime(
-        "%H%M%S")
-    logdir += "-hidden"
+    logdir = time.strftime('%Y%m%d') + '_' + time.strftime('%H%M%S')
+    logdir += '-input_' + config.input_vars
+    logdir += '-hidden'
     for lay in config.hidden_lays.split(','):
-        logdir = logdir + "_" + lay
-    logdir += "-epochs_" + str(config.epochs)
-    logdir += "-batchsize_" + str(config.batch_size)
-    logdir += "-dummydata_" + str(
+        logdir = logdir + '_' + lay
+    logdir += '-batch_' + str(config.batch_size)
+    logdir += '-dum_' + str(
         config.use_dum_data_xy or config.use_dum_data_y)
 
-    return "./logs/{}".format(logdir)
+    return './logs/' + logdir

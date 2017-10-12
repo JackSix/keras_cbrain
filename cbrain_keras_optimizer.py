@@ -6,7 +6,8 @@ Created on Thu Oct  5 00:42:52 2017
 @author: Yacalis
 """
 
-from keras.optimizers import Adam
+from keras.optimizers import Adadelta, Adagrad, Adam, Adamax, Nadam, \
+    RMSprop, SGD
 
 
 class Optimizer:
@@ -15,15 +16,55 @@ class Optimizer:
         return
 
     def main(self, config):
-        if config.optimizer == 'adam':
+
+        if config.optimizer == 'adadelta':
+            optimizer = Adadelta(lr=1.0,
+                                 rho=0.95,
+                                 epsilon=1e-08,
+                                 decay=0.0)
+
+        elif config.optimizer == 'adagrad':
+            optimizer = Adagrad(lr=0.01,
+                                epsilon=1e-08,
+                                decay=0.0)
+
+        elif config.optimizer == 'adam':
             optimizer = Adam(lr=config.lr,
                              beta_1=config.beta_1,
                              beta_2=config.beta_2,
                              epsilon=config.epsilon,
                              decay=config.decay)
+
+        elif config.optimizer == 'adamax':
+            optimizer = Adamax(lr=config.lr,
+                               beta_1=config.beta_1,
+                               beta_2=config.beta_2,
+                               epsilon=config.epsilon,
+                               decay=config.decay)
+
+        elif config.optimizer == 'nadam':
+            optimizer = Nadam(lr=config.lr,
+                              beta_1=config.beta_1,
+                              beta_2=config.beta_2,
+                              epsilon=config.epsilon,
+                              schedule_decay=config.schedule_decay)
+
+        elif config.optimizer == 'rmsprop':
+            optimizer = RMSprop(lr=0.001,
+                                rho=0.9,
+                                epsilon=1e-08,
+                                decay=0.0)
+
+        elif config.optimizer == 'sgd':
+            optimizer = SGD(lr=0.01,
+                            momentum=0.0,
+                            decay=0.0,
+                            nesterov=False)
+
         else:
             raise Exception('[!] Something is wrong - the name of the \
                             optimizer is not a valid choice. Valid choices: \
-                            adam')
+                            adadelta, adagrad, adam, adamax, nadam, rmsprop, \
+                            sgd')
 
         return optimizer
