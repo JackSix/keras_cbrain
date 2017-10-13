@@ -101,10 +101,10 @@ model.compile(loss=config.loss_func,
               optimizer=optimizer,
               metrics=metrics)
 
-print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
-print(f'Hidden layer activation function is {config.hidden_lays_act}.')
-print(f'Output layer activation function is {config.output_lay_act}.')
-print(f'Optimizer is {config.optimizer}.')
+#print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
+#print(f'Hidden layer activation function is {config.hidden_lays_act}.')
+#print(f'Output layer activation function is {config.output_lay_act}.')
+#print(f'Optimizer is {config.optimizer}.')
 
 # =============================================================================
 # Train Model

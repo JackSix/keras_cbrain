@@ -26,16 +26,16 @@ class Config:
 
         # Callbacks
         cback_arg = parser.add_argument_group('Callbacks')
-        cback_arg.add_argument('--min_delta', type=float, default=0.04)
+        cback_arg.add_argument('--min_delta', type=float, default=0.00001)
         cback_arg.add_argument('--mode', type=str, default='min')
         cback_arg.add_argument('--monitor', type=str, default='log10_loss')
-        cback_arg.add_argument('--patience', type=int, default=3)
+        cback_arg.add_argument('--patience', type=int, default=5)
         
         # Data
         data_arg = parser.add_argument_group('Data')
         data_arg.add_argument('--datasets', type=str, default='SPDT,SPDQ',
                               help='names of predicted variable(s)')
-        data_arg.add_argument('--input_vars', type=str, default='OMEGA',
+        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic',
                               help='names of input variables')
         data_arg.add_argument('--normalize', type=bool, default=True)
         
@@ -46,7 +46,7 @@ class Config:
         dum_arg.add_argument('--dum_samples', type=int, default=int(1e6))
         dum_arg.add_argument('--dum_var', type=float, default=0)
         dum_arg.add_argument('--use_dum_data_xy', type=bool, default=False)
-        dum_arg.add_argument('--use_dum_data_y', type=bool, default=True)
+        dum_arg.add_argument('--use_dum_data_y', type=bool, default=False)
 
         # Misc
         misc_arg = parser.add_argument_group('Misc')
@@ -57,7 +57,7 @@ class Config:
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='50',
+        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000',
                              help='comma separated list of hidden layers')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str,
@@ -67,7 +67,7 @@ class Config:
         
         # Optimizer
         optim_arg = parser.add_argument_group('Optimizer')
-        optim_arg.add_argument('--beta_1', type=float, default=0.9)
+        optim_arg.add_argument('--beta_1', type=float, default=0.5)
         optim_arg.add_argument('--beta_2', type=float, default=0.999)
         optim_arg.add_argument('--decay', type=float, default=0.0)
         optim_arg.add_argument('--epsilon', type=float, default=1e-8)
@@ -87,8 +87,8 @@ class Config:
         
         # Training and testing
         train_arg = parser.add_argument_group('Training')
-        train_arg.add_argument('--batch_size', type=int, default=50)
-        train_arg.add_argument('--epochs', type=int, default=30)
+        train_arg.add_argument('--batch_size', type=int, default=128)
+        train_arg.add_argument('--epochs', type=int, default=200)
         train_arg.add_argument('--frac_test', type=float, default=0.2)
         train_arg.add_argument('--shuffle', type=bool, default=True)
         train_arg.add_argument('--valid_split', type=float, default=0.1)
