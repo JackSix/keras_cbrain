@@ -116,11 +116,6 @@ model.compile(loss=loss_func,
               optimizer=optimizer,
               metrics=metrics)
 
-# print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
-# print(f'Hidden layer activation function is {config.hidden_lays_act}.')
-# print(f'Output layer activation function is {config.output_lay_act}.')
-# print(f'Optimizer is {config.optimizer}.')
-
 # =============================================================================
 # Train Model
 # =============================================================================
@@ -145,4 +140,16 @@ configuration.save_config(config, log_dir)
 
 print('Model Training Completed')
 print('Score: ', model.evaluate(x_test, y_test, batch_size=config.batch_size))
+
+print('Saving Model and Weights')
+model_fp = log_dir + 'finished_model.h5'
+weights_fp = log_dir + 'finished_weights.h5'
+model.save(model_fp)
+model.save_weights(weights_fp)
+
+# =============================================================================
+# NOTE: For instructions on how to load the saved model and/or weights, see:
+# https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model
+# =============================================================================
+
 print('End Cbrain Keras Program')

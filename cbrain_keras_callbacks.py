@@ -6,7 +6,7 @@ Created on Thu Oct  5 00:19:31 2017
 @author: Yacalis
 """
 
-from keras.callbacks import TensorBoard, EarlyStopping
+from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
 
 class CustomCallbacks:
@@ -23,14 +23,39 @@ class CustomCallbacks:
             batch_size=config.batch_size,
             write_graph=config.write_graph,
             write_grads=config.write_grads,
-            write_images=config.write_images)
+            write_images=config.write_images
+        )
 
         # set up early stopping
         earlystopping = EarlyStopping(
-            monitor=config.monitor,
-            min_delta=config.min_delta,
-            patience=config.patience,
+            monitor=config.es_monitor,
+            min_delta=config.es_min_delta,
+            patience=config.es_patience,
             verbose=1,
-            mode=config.mode)
+            mode=config.es_mode
+        )
 
-        return [tensorboard, earlystopping]
+        # set up reducing the learning rate when conditions are met
+        reduce_lr_on_plateau = ReduceLROnPlateau(
+            monitor=config.lr_monitor,
+            factor=config.lr_factor,
+            patience=config.lr_patience,
+            verbose=1,
+            mode=config.lr_mode,
+            epsilon=config.lr_epsilon,
+            cooldown=0,
+            min_lr=config.min_lr
+        )
+
+        chckpt_fp = log_dir + 'chckpt.ep_{epoch:02d}-loss_{val_loss:.2f}.hdf5'
+        model_checkpt = ModelCheckpoint(
+            chckpt_fp,
+            monitor=config.mc_monitor,
+            verbose=1,
+            save_best_only=False,
+            save_weights_only=False,
+            mode='auto',
+            period=10
+        )
+
+        return [tensorboard, earlystopping, reduce_lr_on_plateau, model_checkpt]

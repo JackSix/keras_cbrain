@@ -26,11 +26,21 @@ class Config:
 
         # Callbacks
         cback_arg = parser.add_argument_group('Callbacks')
-        cback_arg.add_argument('--min_delta', type=float, default=0.00001)
-        cback_arg.add_argument('--mode', type=str, default='min')
-        cback_arg.add_argument('--monitor', type=str, default='log10_loss')
-        cback_arg.add_argument('--patience', type=int, default=5)
-        
+        # Earlystopping
+        cback_arg.add_argument('--es_min_delta', type=float, default=0.00001)
+        cback_arg.add_argument('--es_mode', type=str, default='min')
+        cback_arg.add_argument('--es_monitor', type=str, default='log10_loss')
+        cback_arg.add_argument('--es_patience', type=int, default=5)
+        # ModelCheckpoint
+        cback_arg.add_argument('--mc_patience', type=str, default='val_loss')
+        # ReduceLROnPlateau
+        cback_arg.add_argument('--lr_epsilon', type=float, default=1e-04)
+        cback_arg.add_argument('--lr_factor', type=float, default=0.1)
+        cback_arg.add_argument('--lr_min_lr', type=float, default=1e-07)
+        cback_arg.add_argument('--lr_mode', type=str, default='min')
+        cback_arg.add_argument('--lr_monitor', type=str, default='log10_loss')
+        cback_arg.add_argument('--lr_patience', type=int, default=5)
+
         # Data
         data_arg = parser.add_argument_group('Data')
         data_arg.add_argument('--datasets', type=str, default='SPDT,SPDQ', help='names of predicted variable(s)')
