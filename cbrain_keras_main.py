@@ -59,13 +59,23 @@ print('Setting Up Metrics, Callbacks, and Optimizer')
 
 metrics = config.metrics.split(',')
 
+
 # add custom metric (same scalar that Pierre uses for "loss/logloss")
 def log10_loss(y_true, y_pred):
     reg_loss = K.sqrt(K.mean(K.square(y_true - y_pred), axis=-1))
     log_loss = K.log(reg_loss + 1e-20) / K.log(10.0)
     return log_loss
 
+
+def rsquared(y_true, y_pred):
+    tot_err = K.reduce_sum(K.square(K.subtract(y_true, K.reduce_mean(y_true))))
+    unexpl_err = K.reduce_sum(K.square(K.subtract(y_true, y_pred)))
+    rsquare = K.subtract(1., K.divide(unexpl_err, tot_err))
+    return rsquare
+
+
 metrics.append(log10_loss)
+metrics.append(rsquared)
 log_dir = get_logdir(config)
 callbacks = CustomCallbacks(config, log_dir).callbacks
 optimizer = Optimizer(config).optimizer
@@ -101,10 +111,10 @@ model.compile(loss=config.loss_func,
               optimizer=optimizer,
               metrics=metrics)
 
-#print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
-#print(f'Hidden layer activation function is {config.hidden_lays_act}.')
-#print(f'Output layer activation function is {config.output_lay_act}.')
-#print(f'Optimizer is {config.optimizer}.')
+# print(f'Network shape: {input_dim, hidden_lays, output_dim}.')
+# print(f'Hidden layer activation function is {config.hidden_lays_act}.')
+# print(f'Output layer activation function is {config.output_lay_act}.')
+# print(f'Optimizer is {config.optimizer}.')
 
 # =============================================================================
 # Train Model

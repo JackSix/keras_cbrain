@@ -33,10 +33,8 @@ class Config:
         
         # Data
         data_arg = parser.add_argument_group('Data')
-        data_arg.add_argument('--datasets', type=str, default='SPDT,SPDQ',
-                              help='names of predicted variable(s)')
-        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic',
-                              help='names of input variables')
+        data_arg.add_argument('--datasets', type=str, default='SPDT,SPDQ', help='names of predicted variable(s)')
+        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic', help='names of input variables')
         data_arg.add_argument('--normalize', type=bool, default=True)
         
         # Dummy data
@@ -57,11 +55,9 @@ class Config:
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000',
-                             help='comma separated list of hidden layers')
+        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000', help='comma separated list of hidden layers')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
-        net_arg.add_argument('--loss_func', type=str,
-                             default='mean_squared_error')
+        net_arg.add_argument('--loss_func', type=str, default='mean_squared_error')
         net_arg.add_argument('--output_lay_act',  type=str, default='linear')
         net_arg.add_argument('--use_dropout', type=bool, default=False)
         
@@ -70,7 +66,7 @@ class Config:
         optim_arg.add_argument('--beta_1', type=float, default=0.5)
         optim_arg.add_argument('--beta_2', type=float, default=0.999)
         optim_arg.add_argument('--decay', type=float, default=0.0)
-        optim_arg.add_argument('--epsilon', type=float, default=1e-8)
+        optim_arg.add_argument('--epsilon', type=float, default=1e-08)
         optim_arg.add_argument('--lr', type=float, default=0.01)
         optim_arg.add_argument('--optimizer', type=str, default='adam')
         optim_arg.add_argument('--schedule_decay', type=float, default=0.004)

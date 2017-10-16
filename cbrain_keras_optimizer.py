@@ -18,48 +18,48 @@ class Optimizer:
     def main(self, config):
 
         if config.optimizer == 'adadelta':
-            optimizer = Adadelta(lr=1.0,
-                                 rho=0.95,
-                                 epsilon=1e-08,
-                                 decay=0.0)
+            optimizer = Adadelta(lr=config.lr,  # 1.0
+                                 rho=config.rho,  # 0.95
+                                 epsilon=config.epsilon,  # 1e-08
+                                 decay=config.decay)  # 0.0
 
         elif config.optimizer == 'adagrad':
-            optimizer = Adagrad(lr=0.01,
-                                epsilon=1e-08,
-                                decay=0.0)
+            optimizer = Adagrad(lr=confgi.lr,  # 0.01
+                                epsilon=config.epsilon,  # 1e-08
+                                decay=config.decay)  # 0.0
 
         elif config.optimizer == 'adam':
-            optimizer = Adam(lr=config.lr,
-                             beta_1=config.beta_1,
-                             beta_2=config.beta_2,
-                             epsilon=config.epsilon,
-                             decay=config.decay)
+            optimizer = Adam(lr=config.lr,  # 0.001
+                             beta_1=config.beta_1,  # 0.9
+                             beta_2=config.beta_2,  # 0.999
+                             epsilon=config.epsilon,  # 1e-08
+                             decay=config.decay)  # 0.0
 
         elif config.optimizer == 'adamax':
-            optimizer = Adamax(lr=config.lr,
-                               beta_1=config.beta_1,
-                               beta_2=config.beta_2,
-                               epsilon=config.epsilon,
-                               decay=config.decay)
+            optimizer = Adamax(lr=config.lr,  # 0.001
+                               beta_1=config.beta_1,  # 0.9
+                               beta_2=config.beta_2,  # 0.999
+                               epsilon=config.epsilon,  # 1e-08
+                               decay=config.decay)  # 0.0
 
         elif config.optimizer == 'nadam':
-            optimizer = Nadam(lr=config.lr,
-                              beta_1=config.beta_1,
-                              beta_2=config.beta_2,
-                              epsilon=config.epsilon,
-                              schedule_decay=config.schedule_decay)
+            optimizer = Nadam(lr=config.lr,  # 0.001
+                              beta_1=config.beta_1,  # 0.9
+                              beta_2=config.beta_2,  # 0.999
+                              epsilon=config.epsilon,  # 1e-08
+                              schedule_decay=config.schedule_decay)  # 0.004
 
         elif config.optimizer == 'rmsprop':
-            optimizer = RMSprop(lr=0.001,
-                                rho=0.9,
-                                epsilon=1e-08,
-                                decay=0.0)
+            optimizer = RMSprop(lr=config.lr,  # 0.001
+                                rho=config.rho,  # 0.9
+                                epsilon=config.epsilon,  # 1e-08
+                                decay=config.decay)  # 0.0
 
         elif config.optimizer == 'sgd':
-            optimizer = SGD(lr=0.01,
-                            momentum=0.0,
-                            decay=0.0,
-                            nesterov=False)
+            optimizer = SGD(lr=config.lr,  # 0.01
+                            momentum=config.momentum,  # 0.0
+                            decay=config.decay,  # 0.0
+                            nesterov=config.nesterov)  # False
 
         else:
             raise Exception('[!] Something is wrong - the name of the \
