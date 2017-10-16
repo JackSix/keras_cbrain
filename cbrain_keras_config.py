@@ -58,7 +58,7 @@ class Config:
         net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000', help='comma separated list of hidden layers')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str, default='mean_squared_error')
-        net_arg.add_argument('--output_lay_act',  type=str, default='linear')
+        net_arg.add_argument('--output_lay_act',  type=str, default='relu')
         net_arg.add_argument('--use_dropout', type=bool, default=False)
         
         # Optimizer

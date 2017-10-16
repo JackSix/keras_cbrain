@@ -19,7 +19,7 @@ print('Importing Libraries, Packages, and Modules')
 
 import keras  # MUST be imported before other keras imports - ignore IDE
 import keras.backend as K
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, Activation
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
@@ -28,6 +28,8 @@ from cbrain_keras_config import Config
 from cbrain_keras_dataLoad import DataLoader
 from cbrain_keras_folderDefs import get_logdir
 from cbrain_keras_optimizer import Optimizer
+from act_funcs import act_funcs
+from loss_funcs import loss_funcs
 
 # =============================================================================
 # Get Data
@@ -47,10 +49,14 @@ print('Setting Parameters')
 
 hidden_lays = list(map(int, config.hidden_lays.split(',')))
 nhidden = len(hidden_lays)
+hidden_lays_act = act_funcs[config.hidden_lays_act]
+output_lay_act = act_funcs[config.output_lay_act]
+loss_func = loss_funcs[config.loss_func]
 
 # define data dims
 input_dim = x_data.shape[1]
 output_dim = y_data.shape[1]
+
 
 # =============================================================================
 # Metrics, Callback, Optimizer
@@ -89,25 +95,24 @@ print('Building Model')
 model = Sequential()
 
 # add input layer and first hidden layer
-model.add(Dense(hidden_lays[0],
-                input_dim=input_dim,
-                activation=config.hidden_lays_act))
+model.add(Dense(hidden_lays[0], input_dim=input_dim))
+model.add(Activation(hidden_lays_act))
 if config.use_dropout:
     model.add(Dropout(config.dropout_rate))
 
 # add any hidden layers after the first one
 for layer in range(nhidden - 1):
-    model.add(Dense(hidden_lays[layer + 1],
-                    activation=config.hidden_lays_act))
+    model.add(Dense(hidden_lays[layer + 1]))
+    model.add(Activation(hidden_lays_act))
     if config.use_dropout:
         model.add(Dropout(config.dropout_rate))
 
 # add output layer
-model.add(Dense(output_dim,
-                activation=config.output_lay_act))
+model.add(Dense(output_dim))
+model.add(Activation(output_lay_act))
 
 # compile model
-model.compile(loss=config.loss_func,
+model.compile(loss=loss_func,
               optimizer=optimizer,
               metrics=metrics)
 
