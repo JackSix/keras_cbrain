@@ -26,7 +26,10 @@ class CustomCallbacks:
             write_images=config.write_images
         )
 
-        # set up early stopping
+        # ======================================================================
+        # if 'monitor' (loss) does not reduce by at least 'min_delta' amount
+        # within 'patience' number of epochs, stop training
+        # ======================================================================
         earlystopping = EarlyStopping(
             monitor=config.es_monitor,
             min_delta=config.es_min_delta,
@@ -35,7 +38,11 @@ class CustomCallbacks:
             mode=config.es_mode
         )
 
-        # set up reducing the learning rate when conditions are met
+        # ======================================================================
+        # if 'monitor' (loss) does not reduce by at least 'epsilon' amount
+        # within 'patience' number of epochs, multiply the learning rate of the
+        # model by 'factor', up to a minimum value of 'min_lr'
+        # ======================================================================
         reduce_lr_on_plateau = ReduceLROnPlateau(
             monitor=config.lr_monitor,
             factor=config.lr_factor,
@@ -47,6 +54,15 @@ class CustomCallbacks:
             min_lr=config.min_lr
         )
 
+        # ======================================================================
+        # save the state of the model and its weights every 'period' epochs
+        #
+        # 'monitor' is a loss value, and when 'save_best_only' is set to True,
+        # the previously saved checkpoint will only be overwritten if the loss
+        # of the new checkpoint is better -- but with early stopping, this
+        # typically won't matter, as training will stop if the model is not
+        # improving
+        # ======================================================================
         chckpt_fp = log_dir + 'chckpt.ep_{epoch:02d}-loss_{val_loss:.2f}.hdf5'
         model_checkpt = ModelCheckpoint(
             chckpt_fp,

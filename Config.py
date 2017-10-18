@@ -43,8 +43,8 @@ class Config:
 
         # Data
         data_arg = parser.add_argument_group('Data')
-        data_arg.add_argument('--datasets', type=str, default='SPDT,SPDQ', help='names of predicted variable(s)')
-        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic', help='names of input variables')
+        data_arg.add_argument('--output_vars', type=str, default='SPDT,SPDQ')
+        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
         data_arg.add_argument('--normalize', type=bool, default=True)
         
         # Dummy data
@@ -65,9 +65,9 @@ class Config:
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000', help='comma separated list of hidden layers')
+        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
-        net_arg.add_argument('--loss_func', type=str, default='mean_squared_error')
+        net_arg.add_argument('--loss_func', type=str, default='mse')
         net_arg.add_argument('--output_lay_act',  type=str, default='relu')
         net_arg.add_argument('--use_dropout', type=bool, default=False)
         
@@ -97,7 +97,7 @@ class Config:
         train_arg.add_argument('--epochs', type=int, default=200)
         train_arg.add_argument('--frac_test', type=float, default=0.2)
         train_arg.add_argument('--shuffle', type=bool, default=True)
-        train_arg.add_argument('--valid_split', type=float, default=0.1)
+        train_arg.add_argument('--valid_split', type=float, default=0.2)
         
         return parser.parse_known_args()
 

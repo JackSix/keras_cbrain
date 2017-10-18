@@ -8,7 +8,7 @@ Created on Sun Oct  1 18:35:57 2017
 
 import numpy as np
 import h5py
-from cbrain_keras_folderDefs import nc_file, mean_file, std_file
+from folder_defs import nc_file, mean_file, std_file
 
 
 # =============================================================================
@@ -19,7 +19,7 @@ class DataLoader:
     def __init__(self, config: object) -> None:
         self.input_vars = config.input_vars.split(',')
         self.datasets = config.datasets.split(',')
-        self.nc_vars = self.input_vars + self.datasets  # currently, not used
+        # self.nc_vars = self.input_vars + self.datasets  # currently, not used
         self.mean = {}
         self.std = {}
 

@@ -8,6 +8,9 @@ Created on Mon Oct 16 11:15:50 2017
 
 from keras.layers.advanced_activations import LeakyReLU, PReLU, ELU, ThresholdedReLU
 
+# =============================================================================
+# NOTE: I made variations on key names to make them harder to mess up
+# =============================================================================
 act_funcs = {
     'elu': 'elu',
     'selu': 'selu',

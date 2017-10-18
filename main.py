@@ -17,17 +17,17 @@ print('Importing Libraries, Packages, and Modules')
 # using-keras-during-development
 # =============================================================================
 
-import keras  # MUST be imported before other keras imports - ignore IDE
+import keras  # must be imported before other keras imports - ignore IDE
 import keras.backend as K
 from keras.layers import Dense, Dropout, Activation
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
-from cbrain_keras_callbacks import CustomCallbacks
-from cbrain_keras_config import Config
-from cbrain_keras_dataLoad import DataLoader
-from cbrain_keras_folderDefs import get_logdir
-from cbrain_keras_optimizer import Optimizer
+from CustomCallbacks import CustomCallbacks
+from Config import Config
+from DataLoader import DataLoader
+from folder_defs import get_logdir
+from Optimizer import Optimizer
 from act_funcs import act_funcs
 from loss_funcs import loss_funcs
 
@@ -47,41 +47,46 @@ y_data = dataloader.y_data
 # =============================================================================
 print('Setting Parameters')
 
+# hidden layers
 hidden_lays = list(map(int, config.hidden_lays.split(',')))
 nhidden = len(hidden_lays)
+
+# activation and loss functions
 hidden_lays_act = act_funcs[config.hidden_lays_act]
 output_lay_act = act_funcs[config.output_lay_act]
 loss_func = loss_funcs[config.loss_func]
 
-# define data dims
+# input/output data dims
 input_dim = x_data.shape[1]
 output_dim = y_data.shape[1]
-
 
 # =============================================================================
 # Metrics, Callback, Optimizer
 # =============================================================================
 print('Setting Up Metrics, Callbacks, and Optimizer')
 
+# add metrics from config
 metrics = config.metrics.split(',')
 
-
-# add custom metric (same scalar that Pierre uses for "loss/logloss")
+# add custom metric: log base 10 of loss function
 def log10_loss(y_true, y_pred):
     reg_loss = K.sqrt(K.mean(K.square(y_true - y_pred), axis=-1))
     log_loss = K.log(reg_loss + 1e-20) / K.log(10.0)
     return log_loss
 
-
+# add custom metric: rsquared as defined in gentine cbrain trainer.py
+# see https://github.com/gentine/CBRAIN/blob/gr-dev/trainer.py
 def rsquared(y_true, y_pred):
     tot_err = K.reduce_sum(K.square(K.subtract(y_true, K.reduce_mean(y_true))))
     unexpl_err = K.reduce_sum(K.square(K.subtract(y_true, y_pred)))
     rsquare = K.subtract(1., K.divide(unexpl_err, tot_err))
     return rsquare
 
-
+# concat all metrics
 metrics.append(log10_loss)
 metrics.append(rsquared)
+
+# set up callbacks and optimizer
 log_dir = get_logdir(config)
 callbacks = CustomCallbacks(config, log_dir).callbacks
 optimizer = Optimizer(config).optimizer
@@ -135,13 +140,15 @@ model.fit(x_train,
           verbose=1,
           callbacks=callbacks)
 
-# misc - save config data from run (can't do this sooner without more code)
-configuration.save_config(config, log_dir)
-
 print('Model Training Completed')
 print('Score: ', model.evaluate(x_test, y_test, batch_size=config.batch_size))
 
-print('Saving Model and Weights')
+# =============================================================================
+# Save Model, Weights, and Config Options
+# =============================================================================
+print('Saving Model, Weights, and Config Options')
+
+configuration.save_config(config, log_dir)
 model_fp = log_dir + 'finished_model.h5'
 weights_fp = log_dir + 'finished_weights.h5'
 model.save(model_fp)

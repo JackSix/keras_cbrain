@@ -15,6 +15,10 @@ class Optimizer:
         self.optimizer = self.main(config)
         return
 
+    # ==========================================================================
+    # NOTE: the default options (based on papers) for each optimizer
+    # is listed to the right of the arguments of each optimizer
+    # ==========================================================================
     def main(self, config):
 
         if config.optimizer == 'adadelta':

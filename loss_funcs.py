@@ -6,6 +6,9 @@ Created on Mon Oct 16 11:17:00 2017
 @author: Yacalis
 """
 
+# =============================================================================
+# NOTE: I made variations on key names to add abbreviated options, if desired
+# =============================================================================
 loss_funcs = {
     'mean_squared_error': 'mean_squared_error',
     'mse': 'mean_squared_error',

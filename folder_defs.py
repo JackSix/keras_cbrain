@@ -14,14 +14,17 @@ std_file = '../cbrain/SP-CAM/SPCAM_std.nc'
 max_file = '../cbrain/SP-CAM/SPCAM_max.nc'
 
 
+# =============================================================================
+# the logdir name is long, but it beats having to look at the parameter json
+# file just to see what the most important values are
+# =============================================================================
 def get_logdir(config: object) -> str:
-    logdir = time.strftime('%Y%m%d') + '_' + time.strftime('%H%M%S')
+    logdir = time.strftime('%m%d') + '_' + time.strftime('%H%M%S')
     logdir += '-input_' + config.input_vars
+    logdir += '-output_' + config.output_vars
     logdir += '-hidden'
     for lay in config.hidden_lays.split(','):
         logdir = logdir + '_' + lay
     logdir += '-batch_' + str(config.batch_size)
-    logdir += '-dum_' + str(
-        config.use_dum_data_xy or config.use_dum_data_y)
 
     return './logs/' + logdir
