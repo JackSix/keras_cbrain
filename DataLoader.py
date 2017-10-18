@@ -18,8 +18,8 @@ class DataLoader:
 
     def __init__(self, config: object) -> None:
         self.input_vars = config.input_vars.split(',')
-        self.datasets = config.datasets.split(',')
-        # self.nc_vars = self.input_vars + self.datasets  # currently, not used
+        self.output_vars = config.output_vars.split(',')
+        # self.nc_vars = self.input_vars + self.output_vars  # currently, not used
         self.mean = {}
         self.std = {}
 
@@ -33,7 +33,7 @@ class DataLoader:
             # self.nlevels = fh['z'].shape[0]  # currently, not used
             # self.nsamples = fh['t'].shape[0]  # currently, not used
             x_data, y_data = self.access_data(
-                    fh, self.input_vars, self.datasets, config.use_convo,
+                    fh, self.input_vars, self.output_vars, config.use_convo,
                     config.normalize, config.use_dum_data_xy,
                     config.use_dum_data_y, config.dum_mult, config.dum_var,
                     config.dum_samples, config.dum_levels)
@@ -43,7 +43,7 @@ class DataLoader:
     # =========================================================================
     # Accessing data
     # =========================================================================
-    def access_data(self, file: h5py.File, input_vars: list, datasets: list,
+    def access_data(self, file: h5py.File, input_vars: list, output_vars: list,
                     use_convo: bool, normalize: bool, dum_xy: bool, dum_y: bool,
                     dum_mult: float, dum_var: float, dum_samp: int,
                     dum_lev: int) -> (np.ndarray, np.ndarray):
@@ -55,7 +55,7 @@ class DataLoader:
         (4) no convolution, real x data,  dummy y data
         (5) no convolution, real x data,  real y data
         """
-        many_datasets = len(datasets) > 1
+        many_output_vars = len(output_vars) > 1
         # x data
         if dum_xy:
             return self.make_dum_data_xy(dum_mult, dum_var, dum_samp, dum_lev)
@@ -70,15 +70,15 @@ class DataLoader:
 
         elif use_convo and not dum_y:
             x_data = self.use_convo_reshape_x(x_data)
-            y_data = self.use_convo_load_nc_data_y(file, datasets,
-                                                   many_datasets,
+            y_data = self.use_convo_load_nc_data_y(file, output_vars,
+                                                   many_output_vars,
                                                    self.convert_units)
 
         elif not use_convo and dum_y:
             y_data = self.make_dummy_data_y(x_data, dum_mult, dum_var)
 
         elif not use_convo and not dum_y:
-            y_data = self.load_nc_data(file, datasets, many_datasets,
+            y_data = self.load_nc_data(file, output_vars, many_output_vars,
                                        self.convert_units)
 
         else:
@@ -173,11 +173,11 @@ class DataLoader:
 
     @staticmethod
     def use_convo_load_nc_data_y(file: h5py.File,
-                                 datasets: list,
+                                 output_vars: list,
                                  map_bool: bool,
                                  map_func: callable) -> np.ndarray:
         y_data = None
-        for k in datasets:
+        for k in output_vars:
             if len(file[k].shape) > 1:
                 # 3d variables
                 arr = file[k][:].T[:, :, None, None]  # [b,h,1,c=1]
