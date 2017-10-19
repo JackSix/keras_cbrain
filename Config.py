@@ -46,15 +46,13 @@ class Config:
         data_arg.add_argument('--output_vars', type=str, default='SPDT,SPDQ')
         data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
         data_arg.add_argument('--normalize', type=bool, default=True)
+        data_arg.add_argument('--convert_units', type=bool, default=True)
         
         # Dummy data
         dum_arg = parser.add_argument_group('Dummy')
-        dum_arg.add_argument('--dum_levels', type=int, default=21)
         dum_arg.add_argument('--dum_mult', type=float, default=1)
-        dum_arg.add_argument('--dum_samples', type=int, default=int(1e6))
         dum_arg.add_argument('--dum_var', type=float, default=0)
-        dum_arg.add_argument('--use_dum_data_xy', type=bool, default=False)
-        dum_arg.add_argument('--use_dum_data_y', type=bool, default=False)
+        dum_arg.add_argument('--make_dum_data_y', type=bool, default=False)
 
         # Misc
         misc_arg = parser.add_argument_group('Misc')

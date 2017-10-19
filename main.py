@@ -26,6 +26,7 @@ from sklearn.model_selection import train_test_split
 from CustomCallbacks import CustomCallbacks
 from Config import Config
 from DataLoader import DataLoader
+from ConvoDataLoader import ConvoDataLoader
 from folder_defs import get_logdir
 from Optimizer import Optimizer
 from act_funcs import act_funcs
@@ -38,9 +39,12 @@ print('Loading Data')
 
 configuration = Config()
 config = configuration.config
-dataloader = DataLoader(config)
-x_data = dataloader.x_data
-y_data = dataloader.y_data
+
+if config.use_convo:
+    dataloader = ConvoDataLoader(config)
+else:
+    dataloader = DataLoader(config)
+x_data, y_data = dataloader.get_data()
 
 # =============================================================================
 # Set Parameter Constants
