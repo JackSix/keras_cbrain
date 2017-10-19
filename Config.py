@@ -32,7 +32,7 @@ class Config:
         cback_arg.add_argument('--es_monitor', type=str, default='log10_loss')
         cback_arg.add_argument('--es_patience', type=int, default=5)
         # ModelCheckpoint
-        cback_arg.add_argument('--mc_patience', type=str, default='val_loss')
+        cback_arg.add_argument('--mc_monitor', type=str, default='val_loss')
         # ReduceLROnPlateau
         cback_arg.add_argument('--lr_epsilon', type=float, default=1e-04)
         cback_arg.add_argument('--lr_factor', type=float, default=0.1)

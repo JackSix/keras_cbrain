@@ -78,17 +78,7 @@ def log10_loss(y_true, y_pred):
     log_loss = K.log(reg_loss + 1e-20) / K.log(10.0)
     return log_loss
 
-# add custom metric: rsquared as defined in gentine cbrain trainer.py
-# see https://github.com/gentine/CBRAIN/blob/gr-dev/trainer.py
-def rsquared(y_true, y_pred):
-    tot_err = K.reduce_sum(K.square(K.subtract(y_true, K.reduce_mean(y_true))))
-    unexpl_err = K.reduce_sum(K.square(K.subtract(y_true, y_pred)))
-    rsquare = K.subtract(1., K.divide(unexpl_err, tot_err))
-    return rsquare
-
-# concat all metrics
 metrics.append(log10_loss)
-metrics.append(rsquared)
 
 # set up callbacks and optimizer
 log_dir = get_logdir(config)

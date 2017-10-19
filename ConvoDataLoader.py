@@ -26,7 +26,7 @@ class ConvoDataLoader(DataLoader):
             y_data = self.make_dummy_data_y(self.x_data, self.config.dum_mult, self.config.dum_var)
         else:
             with h5py.File(self.nc_file, mode='r') as file:
-                y_data = self.load_nc_data_y(file, self.config.output_vars, self.config.convert_units, self.convert_units)
+                y_data = self.load_nc_data_y(file, self.output_vars, self.config.convert_units, self.convert_units)
         return x_data, y_data
 
     @staticmethod

@@ -51,7 +51,7 @@ class CustomCallbacks:
             mode=config.lr_mode,
             epsilon=config.lr_epsilon,
             cooldown=0,
-            min_lr=config.min_lr
+            min_lr=config.lr_min_lr
         )
 
         # ======================================================================

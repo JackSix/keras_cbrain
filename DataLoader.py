@@ -21,7 +21,7 @@ class DataLoader:
         self.output_vars = config.output_vars.split(',')
         self.mean, self.std = self.load_mean_and_std_dicts()
         with h5py.File(nc_file, mode='r') as file:
-            self.x_data = self.load_nc_data(file, config.input_vars, config.normalize, self.norm_data)
+            self.x_data = self.load_nc_data(file, self.input_vars, config.normalize, self.norm_data)
         self.nc_file = nc_file
         self.config = config
 
@@ -93,7 +93,7 @@ class DataLoader:
             y_data = self.make_dummy_data_y(self.x_data, self.config.dum_mult, self.config.dum_var)
         else:
             with h5py.File(self.nc_file, mode='r') as file:
-                y_data = self.load_nc_data(file, self.config.output_vars, self.config.convert_units, self.convert_units)
+                y_data = self.load_nc_data(file, self.output_vars, self.config.convert_units, self.convert_units)
         return self.x_data, y_data
 
     @staticmethod
