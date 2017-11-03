@@ -143,8 +143,8 @@ print('Score: ', model.evaluate(x_test, y_test, batch_size=config.batch_size))
 print('Saving Model, Weights, and Config Options')
 
 configuration.save_config(config, log_dir)
-model_fp = log_dir + 'finished_model.h5'
-weights_fp = log_dir + 'finished_weights.h5'
+model_fp = log_dir + '/finished_model.h5'
+weights_fp = log_dir + '/finished_weights.h5'
 model.save(model_fp)
 model.save_weights(weights_fp)
 

@@ -63,7 +63,7 @@ class CustomCallbacks:
         # typically won't matter, as training will stop if the model is not
         # improving
         # ======================================================================
-        chckpt_fp = log_dir + 'chckpt.ep_{epoch:02d}-loss_{val_loss:.2f}.hdf5'
+        chckpt_fp = log_dir + '/chckpt.ep_{epoch:02d}-loss_{val_loss:.2f}.hdf5'
         model_checkpt = ModelCheckpoint(
             chckpt_fp,
             monitor=config.mc_monitor,

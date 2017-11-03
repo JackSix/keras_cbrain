@@ -63,7 +63,7 @@ class Config:
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='2000,2000,2000')
+        net_arg.add_argument('--hidden_lays',  type=str, default='5,5')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str, default='mse')
         net_arg.add_argument('--output_lay_act',  type=str, default='relu')
