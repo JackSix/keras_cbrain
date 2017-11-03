@@ -22,6 +22,8 @@ def main():
     with open(output_filename, 'w+') as file:
         write_f90_header(file, nb_hidden_layers, hidden_size, output_size, input_size)
 
+        write_convolutional_neural_net_shenannigans(file)
+
         target_names = ['SPDT', 'SPDQ']
         for i in range(len(target_names)):
             target_name = target_names[i]
@@ -34,7 +36,7 @@ def main():
 
 
 # ======================================================================
-# Neural Net Functions
+# Neural Net
 # ======================================================================
 # TODO: actually figure out how to set these based on the data
 def set_nb_constants():
@@ -118,6 +120,11 @@ def write_weights_and_biases(file, iw, lw, b, hidden_size, output_size, input_si
     #         astring = astring + f'{weights_output(kout, k)}, '
     #     astring = astring[1:len(astring-2] ' /)\n'
     #     file.write('weights_output(:) = (/' + astring + ' /)\n')
+
+
+# TODO: whatever cnn shenannigans need to be added
+def write_convolutional_neural_net_shenannigans(file):
+    pass
 
 
 # ======================================================================
