@@ -17,13 +17,12 @@ print('Importing Libraries, Packages, and Modules')
 # using-keras-during-development
 # =============================================================================
 
-import keras  # must be imported before other keras imports - ignore IDE
-import keras.backend as K
 from keras.layers import Dense, Dropout, Activation
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
 
 from CustomCallbacks import CustomCallbacks
+from CustomMetrics import CustomMetrics
 from Config import Config
 from DataLoader import DataLoader
 from ConvoDataLoader import ConvoDataLoader
@@ -32,125 +31,129 @@ from Optimizer import Optimizer
 from act_funcs import act_funcs
 from loss_funcs import loss_funcs
 
-# =============================================================================
-# Get Data
-# =============================================================================
-print('Loading Data')
 
-configuration = Config()
-config = configuration.config
+def main():
+    # ==========================================================================
+    # Get Data
+    # ==========================================================================
+    print('Loading Data')
 
-if config.use_convo:
-    dataloader = ConvoDataLoader(config)
-else:
-    dataloader = DataLoader(config)
-x_data, y_data = dataloader.get_data()
+    configuration = Config()
+    config = configuration.config
 
-# =============================================================================
-# Set Parameter Constants
-# =============================================================================
-print('Setting Parameters')
+    if config.use_convo:
+        dataloader = ConvoDataLoader(config)
+    else:
+        dataloader = DataLoader(config)
+    x_data, y_data = dataloader.get_data()
 
-# hidden layers
-hidden_lays = list(map(int, config.hidden_lays.split(',')))
-nhidden = len(hidden_lays)
+    # ==========================================================================
+    # Set Parameter Constants
+    # ==========================================================================
+    print('Setting Parameters')
 
-# activation and loss functions
-hidden_lays_act = act_funcs[config.hidden_lays_act]
-output_lay_act = act_funcs[config.output_lay_act]
-loss_func = loss_funcs[config.loss_func]
+    # hidden layers
+    hidden_lays = list(map(int, config.hidden_lays.split(',')))
+    nhidden = len(hidden_lays)
 
-# input/output data dims
-input_dim = x_data.shape[1]
-output_dim = y_data.shape[1]
+    # activation and loss functions
+    hidden_lays_act = act_funcs[config.hidden_lays_act]
+    output_lay_act = act_funcs[config.output_lay_act]
+    loss_func = loss_funcs[config.loss_func]
 
-# =============================================================================
-# Metrics, Callback, Optimizer
-# =============================================================================
-print('Setting Up Metrics, Callbacks, and Optimizer')
+    # input/output data dims
+    input_dim = x_data.shape[1]
+    output_dim = y_data.shape[1]
 
-# add metrics from config
-metrics = config.metrics.split(',')
+    # ==========================================================================
+    # Metrics, Callback, Optimizer
+    # ==========================================================================
+    print('Setting Up Metrics, Callbacks, and Optimizer')
 
-# add custom metric: log base 10 of loss function
-def log10_loss(y_true, y_pred):
-    reg_loss = K.sqrt(K.mean(K.square(y_true - y_pred), axis=-1))
-    log_loss = K.log(reg_loss + 1e-20) / K.log(10.0)
-    return log_loss
+    # add metrics from config and custom metrics
+    metrics = config.metrics.split(',')
+    custom_metrics = CustomMetrics().metrics
+    for metric in custom_metrics:
+        metrics.append(metric)
 
-metrics.append(log10_loss)
+    # set up callbacks and optimizer
+    log_dir = get_logdir(config)
+    callbacks = CustomCallbacks(config, log_dir).callbacks
+    optimizer = Optimizer(config).optimizer
 
-# set up callbacks and optimizer
-log_dir = get_logdir(config)
-callbacks = CustomCallbacks(config, log_dir).callbacks
-optimizer = Optimizer(config).optimizer
+    # ==========================================================================
+    # Build Model
+    # ==========================================================================
+    print('Building Model')
 
-# =============================================================================
-# Build Model
-# =============================================================================
-print('Building Model')
+    # create layer arrangement
+    model = Sequential()
 
-# create layer arrangement
-model = Sequential()
-
-# add input layer and first hidden layer
-model.add(Dense(hidden_lays[0], input_dim=input_dim))
-model.add(Activation(hidden_lays_act))
-if config.use_dropout:
-    model.add(Dropout(config.dropout_rate))
-
-# add any hidden layers after the first one
-for layer in range(nhidden - 1):
-    model.add(Dense(hidden_lays[layer + 1]))
+    # add input layer and first hidden layer
+    model.add(Dense(hidden_lays[0], input_dim=input_dim))
     model.add(Activation(hidden_lays_act))
     if config.use_dropout:
         model.add(Dropout(config.dropout_rate))
 
-# add output layer
-model.add(Dense(output_dim))
-model.add(Activation(output_lay_act))
+    # add any hidden layers after the first one
+    for layer in range(nhidden - 1):
+        model.add(Dense(hidden_lays[layer + 1]))
+        model.add(Activation(hidden_lays_act))
+        if config.use_dropout:
+            model.add(Dropout(config.dropout_rate))
 
-# compile model
-model.compile(loss=loss_func,
-              optimizer=optimizer,
-              metrics=metrics)
+    # add output layer
+    model.add(Dense(output_dim))
+    model.add(Activation(output_lay_act))
 
-# =============================================================================
-# Train Model
-# =============================================================================
-print('Training Model')
+    # compile model
+    model.compile(loss=loss_func,
+                  optimizer=optimizer,
+                  metrics=metrics)
 
-# split data into training and test sets
-x_train, x_test, y_train, y_test = train_test_split(
-    x_data, y_data, test_size=config.frac_test)
+    # ==========================================================================
+    # Train Model
+    # ==========================================================================
+    print('Training Model')
 
-# train the model
-model.fit(x_train,
-          y_train,
-          epochs=config.epochs,
-          batch_size=config.batch_size,
-          shuffle=config.shuffle,
-          validation_split=config.valid_split,
-          verbose=1,
-          callbacks=callbacks)
+    # split data into training and test sets
+    x_train, x_test, y_train, y_test = train_test_split(
+        x_data, y_data, test_size=config.frac_test)
 
-print('Model Training Completed')
-print('Score: ', model.evaluate(x_test, y_test, batch_size=config.batch_size))
+    # train the model
+    model.fit(x_train,
+              y_train,
+              epochs=config.epochs,
+              batch_size=config.batch_size,
+              shuffle=config.shuffle,
+              validation_split=config.valid_split,
+              verbose=1,
+              callbacks=callbacks)
 
-# =============================================================================
-# Save Model, Weights, and Config Options
-# =============================================================================
-print('Saving Model, Weights, and Config Options')
+    print('Model Training Completed')
+    print('Score: ', model.evaluate(x_test, y_test, batch_size=config.batch_size))
 
-configuration.save_config(config, log_dir)
-model_fp = log_dir + '/finished_model.h5'
-weights_fp = log_dir + '/finished_weights.h5'
-model.save(model_fp)
-model.save_weights(weights_fp)
+    # ==========================================================================
+    # Save Model, Weights, and Config Options
+    # ==========================================================================
+    print('Saving Model, Weights, and Config Options')
 
-# =============================================================================
-# NOTE: For instructions on how to load the saved model and/or weights, see:
-# https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model
-# =============================================================================
+    configuration.save_config(config, log_dir)
+    model_fp = log_dir + '/finished_model.h5'
+    weights_fp = log_dir + '/finished_weights.h5'
+    model.save(model_fp)
+    model.save_weights(weights_fp)
 
-print('End Cbrain Keras Program')
+    # ==========================================================================
+    # NOTE: For instructions on how to load the saved model and/or weights, see:
+    # https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model
+    # ==========================================================================
+
+    print('End Cbrain Keras Program')
+
+
+# ======================================================================
+# This must be at the bottom of the file
+# ======================================================================
+if __name__ == '__main__':
+    main()
