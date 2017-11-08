@@ -17,6 +17,7 @@ print('Importing Libraries, Packages, and Modules')
 # using-keras-during-development
 # =============================================================================
 
+import numpy as np
 from keras.layers import Dense, Dropout, Activation
 from keras.models import Sequential
 from sklearn.model_selection import train_test_split
@@ -139,10 +140,24 @@ def main():
     print('Saving Model, Weights, and Config Options')
 
     configuration.save_config(config, log_dir)
-    model_fp = log_dir + '/finished_model.h5'
-    weights_fp = log_dir + '/finished_weights.h5'
+
+    model_fp = log_dir + '/finished_model.hdf5'
     model.save(model_fp)
+
+    weights_fp = log_dir + '/finished_weights.hdf5'
     model.save_weights(weights_fp)
+
+    np_weights_fp = log_dir + '/np_finished_weights.txt'
+    weights = model.get_weights()
+    #with open(np_weights_fp, 'w+') as file:
+    #    for i in range(len(weights)):
+    #        np.savetxt(file, weights[i])
+    with open(np_weights_fp, 'w+') as file:
+        for i in range(len(weights)):
+            if i != len(weights) - 1:
+                file.write(str(weights[i]) + ',')
+            else:
+                file.write(str(weights[i]))
 
     # ==========================================================================
     # NOTE: For instructions on how to load the saved model and/or weights, see:
