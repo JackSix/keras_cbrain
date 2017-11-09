@@ -96,4 +96,4 @@ def create_output_layer_filter_and_bias() -> (list, list):
     return output_layer_filters, output_layer_bias
 
 
-run_example()
+#run_example()

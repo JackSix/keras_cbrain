@@ -20,6 +20,9 @@ class DataLoader:
         self.input_vars = config.input_vars.split(',')
         self.output_vars = config.output_vars.split(',')
         self.mean, self.std = self.load_mean_and_std_dicts()
+        with h5py.File(nc_file, mode='r') as file:
+            self.x_data = self.load_nc_data(file, self.input_vars, config.normalize, self.norm_data)
+        self.nc_file = nc_file
         self.config = config
 
     # =========================================================================
@@ -73,7 +76,7 @@ class DataLoader:
             if len(file[k].shape) > 1:
                 arr = file[k][:].T  # 3d variables
             else:
-                arr = file[k][None].T  # 2d variables
+                arr = np.array(file[k])[None].T  # 2d variables
             if map_bool:
                 arr = map_func(arr, k)
             if data is None:
@@ -83,10 +86,24 @@ class DataLoader:
         return data
 
     # =========================================================================
-    # Get data
+    # Get data (overridden in subclasses)
     # =========================================================================
     def get_data(self) -> (np.ndarray, np.ndarray):
-        with h5py.File(nc_file, mode='r') as file:
-            x_data = self.load_nc_data(file, self.input_vars, self.config.normalize, self.norm_data)
-            y_data = self.load_nc_data(file, self.output_vars, self.config.convert_units, self.convert_units)
-        return x_data, y_data
+        if self.config.make_dum_data_y:
+            y_data = self.make_dummy_data_y(self.x_data, self.config.dum_mult, self.config.dum_var)
+        else:
+            with h5py.File(self.nc_file, mode='r') as file:
+                y_data = self.load_nc_data(file, self.output_vars, self.config.convert_units, self.convert_units)
+        return self.x_data, y_data
+
+    @staticmethod
+    def make_dummy_data_y(x_data, multiplier, variance):
+        """
+        Creates y_data by multiplying x_data by a scalar, and then adding some
+        random variance to each value.
+        """
+        y_data = x_data * multiplier
+        m, n = y_data.shape
+        rando = np.random.uniform(-variance, variance, [m, n])
+        y_data = y_data + rando
+        return y_data
