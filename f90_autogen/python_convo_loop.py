@@ -45,6 +45,33 @@ def predict_spdt_spdq(x_input: list, filters_vector: list, biases_vector: list,
 
 
 # ======================================================================
+# This is for the format that inspect checkpoints spits out
+# ======================================================================
+def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
+                                 biases_vector: list, height: int = 21,
+                                 filter_height: int = 3) -> list:
+    state = x_input
+    layers = len(filters_vector)
+    for i in range(layers):
+        filters = filters_vector[i]
+        biases = biases_vector[i]
+        num_channels = len(state[0])
+        new_num_channels = len(filters[0][0][0])
+        state = pad_z_axis(state)
+        new_state = [[0] * new_num_channels for h in range(height)]
+        for f in range(new_num_channels):
+            for x in range(num_channels):
+                for z in range(1, height+1):
+                    for j in range(filter_height):
+                        new_state[z-1][f] += (filters[j][0][x][f] * state[z-j-1][x])
+            for z in range(height):
+                new_state[z][f] += biases[f]
+        state = new_state
+
+    return state
+
+
+# ======================================================================
 # This is here to run a test example
 # ======================================================================
 def run_example() -> list:
@@ -96,4 +123,5 @@ def create_output_layer_filter_and_bias() -> (list, list):
     return output_layer_filters, output_layer_bias
 
 
-#run_example()
+if __name__ == "__main__":
+    run_example()
