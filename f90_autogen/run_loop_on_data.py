@@ -51,7 +51,9 @@ def main():
     print('biases size: ', len(biases), len(biases[0]))
     print('input state size: ', len(state), len(state[0]))
     print('output state size: ', len(new_state), len(new_state[0]))
+    print('new_state, then actual SPDT/SPDQ profile')
     print(new_state)
+    print(y_data[1][:, 0, :].tolist())
 
     print('Done.')
 

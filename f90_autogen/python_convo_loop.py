@@ -21,6 +21,15 @@ def pad_z_axis(matrix: list) -> list:
     return matrix
 
 
+def pad_z_axis_with_zeros(matrix: list) -> list:
+    top_padding = [0] * len(matrix[0][:])
+    bottom_padding = [0] * len(matrix[-1][:])
+    matrix.insert(0, top_padding)
+    matrix.insert(-1, bottom_padding)
+
+    return matrix
+
+
 def predict_spdt_spdq(x_input: list, filters_vector: list, biases_vector: list,
                       height: int = 21, filter_height: int = 3) -> list:
     state = x_input
@@ -39,6 +48,8 @@ def predict_spdt_spdq(x_input: list, filters_vector: list, biases_vector: list,
                         new_state[z-1][f] += (filters[f][j][x] * state[z-j-1][x])
             for z in range(height):
                 new_state[z][f] += biases[f]
+                if new_state[z][f] < 0:
+                    new_state[z][f] *= 0.3  # LeakyReLU step
         state = new_state
 
     return state
@@ -57,7 +68,7 @@ def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
         biases = biases_vector[i]
         num_channels = len(state[0])
         new_num_channels = len(filters[0][0][0])
-        state = pad_z_axis(state)
+        state = pad_z_axis_with_zeros(state)
         new_state = [[0] * new_num_channels for h in range(height)]
         for f in range(new_num_channels):
             for x in range(num_channels):
@@ -66,6 +77,8 @@ def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
                         new_state[z-1][f] += (filters[j][0][x][f] * state[z-j-1][x])
             for z in range(height):
                 new_state[z][f] += biases[f]
+                if new_state[z][f] < 0:
+                    new_state[z][f] *= 0.3  # LeakyReLU step
         state = new_state
 
     return state
