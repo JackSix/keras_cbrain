@@ -12,7 +12,10 @@ from DataLoader import DataLoader
 
 
 class ConvoDataLoader(DataLoader):
-
+    """
+    Change methods from parent class to load data into a format that can
+    be trained within a convolutional neural net
+    """
     @staticmethod
     def load_nc_data(file: h5py.File, output_vars: list, map_bool: bool, map_func: callable) -> np.ndarray:
         y_data = None

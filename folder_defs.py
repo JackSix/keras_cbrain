@@ -8,10 +8,9 @@ Created on Wed Oct  4 16:20:39 2017
 
 import time
 
-nc_file = '../../cbrain/SP-CAM/SPCAM_outputs_tropics.nc'
-mean_file = '../../cbrain/SP-CAM/SPCAM_mean.nc'
-std_file = '../../cbrain/SP-CAM/SPCAM_std.nc'
-max_file = '../../cbrain/SP-CAM/SPCAM_max.nc'
+nc_file = 'SPCAM/SPCAM_outputs_detailed.nc'
+mean_file = 'SPCAM/SPCAM_mean_detailed.nc'
+std_file = 'SPCAM/SPCAM_std_detailed.nc'
 
 
 # =============================================================================

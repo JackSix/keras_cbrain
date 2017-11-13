@@ -1,6 +1,4 @@
 logs/
-old_logs/
 .idea/
-glory/
 __pycache__/
-cbrain_keras_folderDefs.py
+SPCAM/
