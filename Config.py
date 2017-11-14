@@ -29,8 +29,8 @@ class Config:
         # Earlystopping
         cback_arg.add_argument('--es_min_delta', type=float, default=0.00001)
         cback_arg.add_argument('--es_mode', type=str, default='min')
-        cback_arg.add_argument('--es_monitor', type=str, default='log10_loss')
-        cback_arg.add_argument('--es_patience', type=int, default=5)
+        cback_arg.add_argument('--es_monitor', type=str, default='val_loss')
+        cback_arg.add_argument('--es_patience', type=int, default=10)
         # ModelCheckpoint
         cback_arg.add_argument('--mc_monitor', type=str, default='val_loss')
         # ReduceLROnPlateau
@@ -38,13 +38,13 @@ class Config:
         cback_arg.add_argument('--lr_factor', type=float, default=0.1)
         cback_arg.add_argument('--lr_min_lr', type=float, default=1e-07)
         cback_arg.add_argument('--lr_mode', type=str, default='min')
-        cback_arg.add_argument('--lr_monitor', type=str, default='log10_loss')
+        cback_arg.add_argument('--lr_monitor', type=str, default='val_loss')
         cback_arg.add_argument('--lr_patience', type=int, default=5)
 
         # Data
         data_arg = parser.add_argument_group('Data')
         data_arg.add_argument('--output_vars', type=str, default='SPDT,SPDQ')
-        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,PS,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
+        data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
         data_arg.add_argument('--normalize', type=bool, default=True)
         data_arg.add_argument('--convert_units', type=bool, default=True)
         
@@ -56,14 +56,14 @@ class Config:
 
         # Misc
         misc_arg = parser.add_argument_group('Misc')
-        misc_arg.add_argument('--metrics', type=str, default='accuracy')
+        misc_arg.add_argument('--metrics', type=str, default=None)
         misc_arg.add_argument('--random_seed', type=int, default=123)
         misc_arg.add_argument('--use_convo', type=bool, default=False)
 
         # Network
         net_arg = parser.add_argument_group('Network')
         net_arg.add_argument('--dropout_rate', type=float, default=0.5)
-        net_arg.add_argument('--hidden_lays',  type=str, default='5,5')
+        net_arg.add_argument('--hidden_lays',  type=str, default='1024,1024')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str, default='mse')
         net_arg.add_argument('--output_lay_act',  type=str, default='relu')
@@ -75,7 +75,7 @@ class Config:
         optim_arg.add_argument('--beta_2', type=float, default=0.999)
         optim_arg.add_argument('--decay', type=float, default=0.0)
         optim_arg.add_argument('--epsilon', type=float, default=1e-08)
-        optim_arg.add_argument('--lr', type=float, default=0.01)
+        optim_arg.add_argument('--lr', type=float, default=1e-06)
         optim_arg.add_argument('--optimizer', type=str, default='adam')
         optim_arg.add_argument('--schedule_decay', type=float, default=0.004)
         optim_arg.add_argument('--rho', type=float, default=0.95)

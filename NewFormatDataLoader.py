@@ -16,34 +16,43 @@ class NewFormatDataLoader(DataLoader):
     """
     Pritch -- hacked to interface with bigger data set organized as:
     3D: float TAP(date, time, lev, lat, lon)
-    2D: float PS(date, time, lat, lon)
+    2D: float SHFLX(date, time, lat, lon)
     """
-    @staticmethod
-    def load_nc_data(file: h5py.File, var_list: list, map_bool: bool, map_func: callable) -> np.ndarray:
+    def load_nc_data(self, file: h5py.File, var_list: list, map_bool: bool, map_func: callable) -> np.ndarray:
+        num_samples = 10000
+        month, time, lat, lon = self.gen_rand_samp_indexes(num_samples)
+
         data = None
-        for varname in var_list:
-            print('Reading data for ', varname)
-            is3D = len(file[varname].shape) > 4
+        for k in var_list:
 
-            if is3D:
-                arr = np.zeros((5000, 21), np.float32)
-            else:
-                arr = np.zeros((5000, 1), np.float32)
-
-            for jj in range(5000):
-                imonth = randint(0, 11)
-                itimeofday = randint(1, 46)
-                ilon = randint(0, 127)
-                ilat = randint(0, 63)
-                if is3D:
-                    arr[jj, :] = file[varname][imonth, itimeofday, :, ilat, ilon]
-                else:
-                    arr[jj] = file[varname][imonth, itimeofday, ilat, ilon]
+            print('Reading data for:', k)
+            var_data = file[k]
+            if len(var_data.shape) > 4:  # 3D
+                arr = np.zeros((num_samples, 21), np.float32)
+                for j in range(num_samples):
+                    arr[j, :] = var_data[month[j], time[j], :, lat[j], lon[j]]
+            else:  # 2D
+                arr = np.zeros((num_samples, 1), np.float32)
+                for j in range(num_samples):
+                    arr[j] = var_data[month[j], time[j], lat[j], lon[j]]
 
             if map_bool:
-                arr = map_func(arr, varname)  # e.g. rescale SPDT, SPDQ.
+                arr = map_func(arr, k)  # e.g. rescale SPDT, SPDQ.
             if data is None:
                 data = arr
             else:
                 data = np.concatenate((data, arr), axis=1)
         return data
+
+    @staticmethod
+    def gen_rand_samp_indexes(num_samples: int) -> (list, list, list, list):
+        month = []
+        time = []
+        lat = []
+        lon = []
+        for i in range(num_samples):
+            month.append(randint(0, 11))
+            time.append(randint(1, 46))
+            lat.append(randint(0, 63))
+            lon.append(randint(0, 127))
+        return month, time, lat, lon

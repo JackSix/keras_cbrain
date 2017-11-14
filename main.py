@@ -25,7 +25,8 @@ from sklearn.model_selection import train_test_split
 from CustomCallbacks import CustomCallbacks
 from CustomMetrics import CustomMetrics
 from Config import Config
-from DataLoader import DataLoader
+# from DataLoader import DataLoader
+from NewFormatDataLoader import NewFormatDataLoader
 from ConvoDataLoader import ConvoDataLoader
 from folder_defs import get_logdir
 from Optimizer import Optimizer
@@ -45,7 +46,7 @@ def main():
     if config.use_convo:
         dataloader = ConvoDataLoader(config)
     else:
-        dataloader = DataLoader(config)
+        dataloader = NewFormatDataLoader(config)
     x_data, y_data = dataloader.get_data()
 
     # ==========================================================================
@@ -72,7 +73,7 @@ def main():
     print('Setting Up Metrics, Callbacks, and Optimizer')
 
     # add metrics from config and custom metrics
-    metrics = config.metrics.split(',')
+    metrics = config.metrics.split(',') if config.metrics else []
     custom_metrics = CustomMetrics().metrics
     for metric in custom_metrics:
         metrics.append(metric)
@@ -149,14 +150,13 @@ def main():
 
     np_weights_fp = log_dir + '/np_finished_weights.txt'
     weights = model.get_weights()
-    #with open(np_weights_fp, 'w+') as file:
-    #    for i in range(len(weights)):
-    #        np.savetxt(file, weights[i])
     with open(np_weights_fp, 'w+') as file:
         for i in range(len(weights)):
             if i != len(weights) - 1:
-                file.write(str(weights[i]) + ',')
+                file.write('shape: ' + str(weights[i].shape) + '\n')
+                file.write(str(weights[i]) + '\n')
             else:
+                file.write('shape: ' + str(weights[i].shape) + '\n')
                 file.write(str(weights[i]))
 
     # ==========================================================================
