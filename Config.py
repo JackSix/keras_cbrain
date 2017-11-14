@@ -16,8 +16,8 @@ class Config:
     def __init__(self):
         self.config, unparsed = self.main()
         if unparsed:
-            raise Exception('[!] Something is wrong - there are unrecognized \
-                            parameters present.')
+            raise Exception(f'[!] Something is wrong - there are unrecognized \
+                            parameters present: {unparsed}')
         return
     
     @staticmethod
@@ -59,6 +59,7 @@ class Config:
         misc_arg.add_argument('--metrics', type=str, default=None)
         misc_arg.add_argument('--random_seed', type=int, default=123)
         misc_arg.add_argument('--use_convo', type=bool, default=False)
+        misc_arg.add_argument('--use_new_data_format', type=bool, default=True)
 
         # Network
         net_arg = parser.add_argument_group('Network')

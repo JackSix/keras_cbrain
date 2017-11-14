@@ -68,17 +68,25 @@ def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
         biases = biases_vector[i]
         num_channels = len(state[0])
         new_num_channels = len(filters[0][0][0])
-        state = pad_z_axis_with_zeros(state)
         new_state = [[0] * new_num_channels for h in range(height)]
-        for f in range(new_num_channels):
-            for x in range(num_channels):
-                for z in range(1, height+1):
-                    for j in range(filter_height):
-                        new_state[z-1][f] += (filters[j][0][x][f] * state[z-j-1][x])
-            for z in range(height):
-                new_state[z][f] += biases[f]
-                if new_state[z][f] < 0:
-                    new_state[z][f] *= 0.3  # LeakyReLU step
+        if i != len(layers-1):  # i.e. if not the last layer
+            state = pad_z_axis_with_zeros(state)
+            for f in range(new_num_channels):
+                for x in range(num_channels):
+                    for z in range(height):
+                        for j in range(filter_height):
+                            new_state[z][f] += (filters[j][0][x][f] * state[z+j][x])
+                for z in range(height):
+                    new_state[z][f] += biases[f]
+                    if new_state[z][f] < 0:
+                        new_state[z][f] *= 0.3  # LeakyReLU step
+        else:  # last layer has filter of size (1,1) and no activation function
+            for f in range(new_num_channels):
+                for x in range(num_channels):
+                    for z in range(height):
+                        new_state[z][f] += (filters[0][0][x][f] * state[z][x])
+                for z in range(height):
+                    new_state[z][f] += biases[f]
         state = new_state
 
     return state

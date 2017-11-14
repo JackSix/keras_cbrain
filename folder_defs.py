@@ -7,10 +7,16 @@ Created on Wed Oct  4 16:20:39 2017
 """
 
 import time
+from Config import Config
 
-nc_file = 'SPCAM/SPCAM_outputs_detailed.nc'
-mean_file = 'SPCAM/SPCAM_mean_detailed.nc'
-std_file = 'SPCAM/SPCAM_std_detailed.nc'
+if Config().config.use_new_data_format:
+    nc_file = 'SPCAM/SPCAM_outputs_detailed.nc'
+    mean_file = 'SPCAM/SPCAM_mean_detailed.nc'
+    std_file = 'SPCAM/SPCAM_std_detailed.nc'
+else:
+    nc_file = '../cbrain/SP-CAM/SPCAM_outputs_tropics.nc'
+    mean_file = '../cbrain/SP-CAM/SPCAM_mean.nc'
+    std_file = '../cbrain/SP-CAM/SPCAM_std.nc'
 
 
 # =============================================================================

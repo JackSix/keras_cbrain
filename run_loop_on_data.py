@@ -7,28 +7,28 @@ Created on Wed Nov 8 15:59:30 2017
 """
 
 import numpy as np
-from ConvoDataLoader import ConvoDataLoader
 from Config import Config
-from f90_autogen.python_convo_loop import chckpt_ver_predict_spdt_spdq
-from f90_autogen.inspect_checkpoint import print_tensors_in_checkpoint_file
+from ConvoDataLoader import ConvoDataLoader
+from python_convo_loop import chckpt_ver_predict_spdt_spdq
+from inspect_checkpoint import print_tensors_in_checkpoint_file
 
 
 def main():
     print('Starting Program')
 
     print('Setting Constants')
-    input_vars = 'TAP,QAP,dQdt_adiabatic,dTdt_adiabatic,SHFLX,LHFLX'
+    input_vars = 'TAP,QAP,OMEGA,SHFLX,LHFLX,LAT,dTdt_adiabatic,dQdt_adiabatic,QRL,QRS'
     chckpt_file = '../' \
-                  '../' \
-                  'tensorboard_logs_tmp/' \
-                  '1017-1018_logs/' \
-                  '1018_122541_' \
+                  'tensorboard_logs/' \
+                  'Pierre/' \
+                  '1028_123916_' \
                   'SPDT,SPDQ_' \
                   'layers_32,32,32,32,32,32_' \
-                  '_kdr_1.0_ac_0_' \
+                  'kdr_1.0_ac_0_' \
                   'convo_True_' \
-                  f'variables_{input_vars}/' \
-                  'model.ckpt-451183'
+                  f'variables_{input_vars}_' \
+                  'batchsize_128/' \
+                  'model.ckpt-1192378'
     tensor_name = ''
     all_tensors = True
 
