@@ -8,7 +8,10 @@ Created on Wed Nov 8 15:59:30 2017
 
 import numpy as np
 from Config import Config
+from DataLoader import DataLoader
+from DetailedDataLoader import DetailedDataLoader
 from ConvoDataLoader import ConvoDataLoader
+from ConvoDetailedDataLoader import ConvoDetailedDataLoader
 from python_convo_loop import chckpt_ver_predict_spdt_spdq
 from inspect_checkpoint import print_tensors_in_checkpoint_file
 
@@ -18,17 +21,17 @@ def main():
 
     print('Setting Constants')
     input_vars = 'TAP,QAP,OMEGA,SHFLX,LHFLX,LAT,dTdt_adiabatic,dQdt_adiabatic,QRL,QRS'
-    chckpt_file = '../' \
-                  'tensorboard_logs/' \
-                  'Pierre/' \
-                  '1028_123916_' \
-                  'SPDT,SPDQ_' \
-                  'layers_32,32,32,32,32,32_' \
-                  'kdr_1.0_ac_0_' \
-                  'convo_True_' \
-                  f'variables_{input_vars}_' \
-                  'batchsize_128/' \
-                  'model.ckpt-1192378'
+    #chckpt_file = '../tensorboard_logs/' \
+    #              'Pierre/' \
+    #              '1028_123916_' \
+    #              'SPDT,SPDQ_' \
+    #              'layers_32,32,32,32,32,32_' \
+    #              'kdr_1.0_ac_0_' \
+    #              'convo_True_' \
+    #              f'variables_{input_vars}_' \
+    #              'batchsize_128/' \
+    #              'model.ckpt-1192378'
+    chckpt_file = '../tensorboard_logs/Pierre/1028_123916_SPDT,SPDQ_layers_32,32,32,32,32,32_kdr_1.0_ac_0_convo_True_variables_TAP,QAP,OMEGA,SHFLX,LHFLX,LAT,dTdt_adiabatic,dQdt_adiabatic,QRL,QRS_batchsize_128/model.ckpt-1192378'
     tensor_name = ''
     all_tensors = True
 
@@ -40,7 +43,16 @@ def main():
     configuration = Config()
     config = configuration.config
     config.input_vars = input_vars
-    dataloader = ConvoDataLoader(config)
+    if config.use_convo:
+        if config.use_detailed_data:
+            dataloader = ConvoDetailedDataLoader(config)
+        else:
+            dataloader = ConvoDataLoader(config)
+    else:
+        if config.use_detailed_data:
+            dataloader = DetailedDataLoader(config)
+        else:
+            dataloader = DataLoader(config)
     x_data, y_data = dataloader.get_data()
     print('x_data shape: ', x_data.shape)
     print('y_data shape: ', y_data.shape)

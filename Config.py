@@ -47,6 +47,9 @@ class Config:
         data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
         data_arg.add_argument('--normalize', type=bool, default=True)
         data_arg.add_argument('--convert_units', type=bool, default=True)
+        data_arg.add_argument('--use_convo', type=bool, default=False)
+        data_arg.add_argument('--use_detailed_data', type=bool, default=True)
+        data_arg.add_argument('--detail_data_num_samples', type=int, default=10000)
         
         # Dummy data
         dum_arg = parser.add_argument_group('Dummy')
@@ -58,8 +61,6 @@ class Config:
         misc_arg = parser.add_argument_group('Misc')
         misc_arg.add_argument('--metrics', type=str, default=None)
         misc_arg.add_argument('--random_seed', type=int, default=123)
-        misc_arg.add_argument('--use_convo', type=bool, default=False)
-        misc_arg.add_argument('--use_detailed_data', type=bool, default=True)
 
         # Network
         net_arg = parser.add_argument_group('Network')
@@ -67,7 +68,7 @@ class Config:
         net_arg.add_argument('--hidden_lays',  type=str, default='1024,1024')
         net_arg.add_argument('--hidden_lays_act', type=str, default='relu')
         net_arg.add_argument('--loss_func', type=str, default='mse')
-        net_arg.add_argument('--output_lay_act',  type=str, default='relu')
+        net_arg.add_argument('--output_lay_act',  type=str, default='tanh')
         net_arg.add_argument('--use_dropout', type=bool, default=False)
         
         # Optimizer

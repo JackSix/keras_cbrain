@@ -25,9 +25,10 @@ from sklearn.model_selection import train_test_split
 from CustomCallbacks import CustomCallbacks
 from CustomMetrics import CustomMetrics
 from Config import Config
-# from DataLoader import DataLoader
+from DataLoader import DataLoader
 from DetailedDataLoader import DetailedDataLoader
 from ConvoDataLoader import ConvoDataLoader
+from ConvoDetailedDataLoader import ConvoDetailedDataLoader
 from folder_defs import get_logdir
 from Optimizer import Optimizer
 from act_funcs import act_funcs
@@ -44,9 +45,15 @@ def main():
     config = configuration.config
 
     if config.use_convo:
-        dataloader = ConvoDataLoader(config)
+        if config.use_detailed_data:
+            dataloader = ConvoDetailedDataLoader(config)
+        else:
+            dataloader = ConvoDataLoader(config)
     else:
-        dataloader = DetailedDataLoader(config)
+        if config.use_detailed_data:
+            dataloader = DetailedDataLoader(config)
+        else:
+            dataloader = DataLoader(config)
     x_data, y_data = dataloader.get_data()
 
     # ==========================================================================

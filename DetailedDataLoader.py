@@ -23,7 +23,7 @@ class DetailedDataLoader(DataLoader):
      - Should be used when config.use_detailed_data == True
     """
     def load_nc_data(self, file: h5py.File, var_list: list, map_bool: bool, map_func: callable) -> np.ndarray:
-        num_samples = 10000
+        num_samples = self.config.detail_data_num_samples
         month, time, lat, lon = self.gen_rand_samp_indexes(num_samples)
 
         data = None
