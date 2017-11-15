@@ -18,41 +18,30 @@ import sys
 
 from tensorflow.python import pywrap_tensorflow
 from tensorflow.python.platform import app
-from tensorflow.python.platform import flags
 
 
-def print_tensors_in_checkpoint_file(file_name, tensor_name, all_tensors):
+def print_tensors_in_checkpoint_file(file_name):
     """
     :param file_name: Name of the checkpoint file.
-    :param tensor_name: Name of the tensor in the checkpoint file to print.
-    :param all_tensors: Boolean indicating whether to print all tensors.
-    :return:
+    :return: filters, biases (list, list)
 
-    Prints tensors in a checkpoint file.
-    If no 'tensor_name' is provided, prints the tensor names and shapes in the
-    file. If 'tensor_name' is provided, prints the content of the tensor.
+    Prints the tensor names and shapes in the given checkpoint file
     """
     try:
         reader = pywrap_tensorflow.NewCheckpointReader(file_name)
-        if all_tensors:
-            var_to_shape_map = reader.get_variable_to_shape_map()
-            filters = []
-            biases = []
-            bad_keys = ['power', 'Adam', 'lr', 'step']
-            for key in sorted(var_to_shape_map):
-                if not any([e in key for e in bad_keys]):
-                    tensor = reader.get_tensor(key)
-                    print(key, tensor.shape)
-                    if 'kernel' in key:
-                        filters.append(tensor.tolist())
-                    elif 'bias' in key:
-                        biases.append(tensor.tolist())
-            return filters, biases
-        elif not tensor_name:
-            print(reader.debug_string().decode("utf-8"))
-        else:
-            print("tensor_name: ", tensor_name)
-            print(reader.get_tensor(tensor_name))
+        var_to_shape_map = reader.get_variable_to_shape_map()
+        filters = []
+        biases = []
+        bad_keys = ['power', 'Adam', 'lr', 'step']
+        for key in sorted(var_to_shape_map):
+            if not any([e in key for e in bad_keys]):
+                tensor = reader.get_tensor(key)
+                print(key, tensor.shape)
+                if 'kernel' in key:
+                    filters.append(tensor.tolist())
+                elif 'bias' in key:
+                    biases.append(tensor.tolist())
+        return filters, biases
 
     except Exception as e:  # pylint: disable=broad-except
         print(str(e))
@@ -76,8 +65,7 @@ def main(unused_argv):
               "[--tensor_name=tensor_to_print]")
         sys.exit(1)
     else:
-        print_tensors_in_checkpoint_file(
-            flags.file_name, flags.tensor_name, flags.all_tensors)
+        print_tensors_in_checkpoint_file(flags.file_name)
 
 
 if __name__ == "__main__":
@@ -87,15 +75,5 @@ if __name__ == "__main__":
         type=str,
         default="",
         help="logdir + {shared prefix between all files in the checkpoint}.")
-    parser.add_argument(
-        "--tensor_name",
-        type=str,
-        default="",
-        help="Name of the tensor to inspect")
-    parser.add_argument(
-        "--all_tensors",
-        type=bool,
-        default=True,
-        help="If True, print the values of all the tensors.")
     flags, unparsed = parser.parse_known_args()
     app.run(main=main, argv=[sys.argv[0]] + unparsed)

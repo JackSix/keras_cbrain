@@ -21,23 +21,19 @@ def main():
 
     print('Setting Constants')
     input_vars = 'TAP,QAP,OMEGA,SHFLX,LHFLX,LAT,dTdt_adiabatic,dQdt_adiabatic,QRL,QRS'
-    #chckpt_file = '../tensorboard_logs/' \
-    #              'Pierre/' \
-    #              '1028_123916_' \
-    #              'SPDT,SPDQ_' \
-    #              'layers_32,32,32,32,32,32_' \
-    #              'kdr_1.0_ac_0_' \
-    #              'convo_True_' \
-    #              f'variables_{input_vars}_' \
-    #              'batchsize_128/' \
-    #              'model.ckpt-1192378'
-    chckpt_file = '../tensorboard_logs/Pierre/1028_123916_SPDT,SPDQ_layers_32,32,32,32,32,32_kdr_1.0_ac_0_convo_True_variables_TAP,QAP,OMEGA,SHFLX,LHFLX,LAT,dTdt_adiabatic,dQdt_adiabatic,QRL,QRS_batchsize_128/model.ckpt-1192378'
-    tensor_name = ''
-    all_tensors = True
+    chckpt_file = '../tensorboard_logs/' \
+                  'Pierre/' \
+                  '1028_123916_' \
+                  'SPDT,SPDQ_' \
+                  'layers_32,32,32,32,32,32_' \
+                  'kdr_1.0_ac_0_' \
+                  'convo_True_' \
+                  f'variables_{input_vars}_' \
+                  'batchsize_128/' \
+                  'model.ckpt-1192378'
 
     print('Getting Checkpoint Filters and Biases')
-    filters, biases = print_tensors_in_checkpoint_file(
-        chckpt_file, tensor_name, all_tensors)
+    filters, biases = print_tensors_in_checkpoint_file(chckpt_file)
 
     print('Loading SP-CAM Data')
     configuration = Config()
@@ -67,7 +63,7 @@ def main():
         state = x_data[rand_samp][:, 0, :]
         new_state = chckpt_ver_predict_spdt_spdq(state.tolist(), filters, biases)
         new_state_arr.append(new_state)
-        y_data_arr.append(y_data[rand_samp+1][:, 0, :].tolist())
+        y_data_arr.append(y_data[rand_samp][:, 0, :].tolist())
     print('pred: ', new_state_arr)
     print('actual: ', y_data_arr)
     print('input state size: ', len(state), len(state[0]))

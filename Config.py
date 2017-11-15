@@ -47,7 +47,7 @@ class Config:
         data_arg.add_argument('--input_vars', type=str, default='TAP,QAP,SHFLX,LHFLX,dQdt_adiabatic,dTdt_adiabatic')
         data_arg.add_argument('--normalize', type=bool, default=True)
         data_arg.add_argument('--convert_units', type=bool, default=True)
-        data_arg.add_argument('--use_convo', type=bool, default=False)
+        data_arg.add_argument('--use_convo', type=bool, default=True)
         data_arg.add_argument('--use_detailed_data', type=bool, default=True)
         data_arg.add_argument('--detail_data_num_samples', type=int, default=10000)
         

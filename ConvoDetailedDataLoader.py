@@ -36,8 +36,8 @@ class ConvoDetailedDataLoader(DetailedDataLoader):
             else:  # 2D
                 arr = np.zeros((num_samples, 1, 1, 1), np.float32)
                 for j in range(num_samples):
-                    arr[j, 1, 1, 1] = var_data[month[j], time[j], lat[j], lon[j]]
-                    arr = np.tile(arr, (1, 21, 1, 1))
+                    arr[j, 0, 0, 0] = var_data[month[j], time[j], lat[j], lon[j]]
+                arr = np.tile(arr, (1, 21, 1, 1))
             if map_bool:
                 arr = map_func(arr, k)
             if data is None:

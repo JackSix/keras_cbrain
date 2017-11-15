@@ -9,18 +9,19 @@ Created on Wed Oct  4 16:20:39 2017
 import time
 from Config import Config
 
-mean_file = '../SPCAM/SPCAM_new_norms/SPCAM_mean.nc'
-std_file = '../SPCAM/SPCAM_new_norms/SPCAM_std.nc'
-max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
-
 # =============================================================================
-# the 'old' format combines [lat, lon, month, time] into one dimension,
-# but the 'new' format leaves all of that uncombined
+# the 'regular' format combines [lat, lon, month, time] into one dimension,
+# but the 'detailed' format leaves all of that uncombined
 # =============================================================================
 if Config().config.use_detailed_data:
     nc_file = '../SPCAM/SPCAM_Stephan/SPCAM_outputs_detailed.nc'
+    mean_file = '../SPCAM/SPCAM_Stephan/SPCAM_mean_detailed.nc'
+    std_file = '../SPCAM/SPCAM_Stephan/SPCAM_std_detailed.nc'
 else:
     nc_file = '../SPCAM/SPCAM_Pierre/SPCAM_outputs_tropics.nc'
+    mean_file = '../SPCAM/SPCAM_new_norms/SPCAM_mean.nc'
+    std_file = '../SPCAM/SPCAM_new_norms/SPCAM_std.nc'
+max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
 
 # =============================================================================
 # the logdir name is long, but it beats having to look at the parameter json

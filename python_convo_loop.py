@@ -55,7 +55,7 @@ def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
         num_channels = len(state[0])
         new_num_channels = len(filters[0][0][0])
         new_state = [[0] * new_num_channels for h in range(height)]
-        if i != len(layers-1):
+        if i != layers-1:
             state = pad_z_axis_with_zeros(state)
             for f in range(new_num_channels):
                 for x in range(num_channels):
