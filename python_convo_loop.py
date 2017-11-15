@@ -7,10 +7,10 @@ Created on Wed Nov 8 09:26:01 2017
 """
 
 
-def pad_z_axis_with_zeros(matrix: list) -> list:
+def pad_z_axis_symmetric(matrix: list) -> list:
     """Pads top and bottom of a 2D matrix each with a single row of zeros"""
-    top_padding = [0] * len(matrix[0][:])
-    bottom_padding = [0] * len(matrix[-1][:])
+    top_padding = matrix[0][:]
+    bottom_padding = matrix[-1][:]
     matrix.insert(0, top_padding)
     matrix.insert(-1, bottom_padding)
 
@@ -56,7 +56,7 @@ def chckpt_ver_predict_spdt_spdq(x_input: list, filters_vector: list,
         new_num_channels = len(filters[0][0][0])
         new_state = [[0] * new_num_channels for h in range(height)]
         if i != layers-1:
-            state = pad_z_axis_with_zeros(state)
+            state = pad_z_axis_symmetric(state)
             for f in range(new_num_channels):
                 for x in range(num_channels):
                     for z in range(height):
