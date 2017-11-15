@@ -21,7 +21,7 @@ else:
     nc_file = '../SPCAM/SPCAM_Pierre/SPCAM_outputs_tropics.nc'
     mean_file = '../SPCAM/SPCAM_new_norms/SPCAM_mean.nc'
     std_file = '../SPCAM/SPCAM_new_norms/SPCAM_std.nc'
-max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
+    max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
 
 # =============================================================================
 # the logdir name is long, but it beats having to look at the parameter json

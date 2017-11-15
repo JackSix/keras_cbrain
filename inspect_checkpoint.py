@@ -20,7 +20,7 @@ from tensorflow.python import pywrap_tensorflow
 from tensorflow.python.platform import app
 
 
-def print_tensors_in_checkpoint_file(file_name):
+def get_tensors_from_checkpoint_file(file_name):
     """
     :param file_name: Name of the checkpoint file.
     :return: filters, biases (list, list)
@@ -65,7 +65,7 @@ def main(unused_argv):
               "[--tensor_name=tensor_to_print]")
         sys.exit(1)
     else:
-        print_tensors_in_checkpoint_file(flags.file_name)
+        get_tensors_from_checkpoint_file(flags.file_name)
 
 
 if __name__ == "__main__":
