@@ -17,7 +17,7 @@ max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
 # the 'old' format combines [lat, lon, month, time] into one dimension,
 # but the 'new' format leaves all of that uncombined
 # =============================================================================
-if Config().config.use_new_data_format:
+if Config().config.use_detailed_data:
     nc_file = '../SPCAM/SPCAM_Stephan/SPCAM_outputs_detailed.nc'
 else:
     nc_file = '../SPCAM/SPCAM_Pierre/SPCAM_outputs_tropics.nc'

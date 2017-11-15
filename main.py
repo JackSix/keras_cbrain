@@ -26,7 +26,7 @@ from CustomCallbacks import CustomCallbacks
 from CustomMetrics import CustomMetrics
 from Config import Config
 # from DataLoader import DataLoader
-from NewFormatDataLoader import NewFormatDataLoader
+from DetailedDataLoader import DetailedDataLoader
 from ConvoDataLoader import ConvoDataLoader
 from folder_defs import get_logdir
 from Optimizer import Optimizer
@@ -46,7 +46,7 @@ def main():
     if config.use_convo:
         dataloader = ConvoDataLoader(config)
     else:
-        dataloader = NewFormatDataLoader(config)
+        dataloader = DetailedDataLoader(config)
     x_data, y_data = dataloader.get_data()
 
     # ==========================================================================

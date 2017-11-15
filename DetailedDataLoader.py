@@ -12,7 +12,7 @@ from DataLoader import DataLoader
 from random import randint
 
 
-class NewFormatDataLoader(DataLoader):
+class DetailedDataLoader(DataLoader):
     """
      Pritch -- hacked to interface with bigger data set organized as:
      3D: float TAP(date, time, lev, lat, lon) -- len(lev) = 21
@@ -20,7 +20,7 @@ class NewFormatDataLoader(DataLoader):
 
      - This class is used with Stephan's file: SPCAM_outputs_detailed.nc
      - This class is for a regular dense network, NOT a convolutional network
-     - Should be used when config.use_new_data_format == True
+     - Should be used when config.use_detailed_data == True
     """
     def load_nc_data(self, file: h5py.File, var_list: list, map_bool: bool, map_func: callable) -> np.ndarray:
         num_samples = 10000

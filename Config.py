@@ -59,7 +59,7 @@ class Config:
         misc_arg.add_argument('--metrics', type=str, default=None)
         misc_arg.add_argument('--random_seed', type=int, default=123)
         misc_arg.add_argument('--use_convo', type=bool, default=False)
-        misc_arg.add_argument('--use_new_data_format', type=bool, default=True)
+        misc_arg.add_argument('--use_detailed_data', type=bool, default=True)
 
         # Network
         net_arg = parser.add_argument_group('Network')
