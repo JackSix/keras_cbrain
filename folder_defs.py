@@ -9,15 +9,18 @@ Created on Wed Oct  4 16:20:39 2017
 import time
 from Config import Config
 
-if Config().config.use_new_data_format:
-    nc_file = 'SPCAM/SPCAM_outputs_detailed.nc'
-    mean_file = 'SPCAM/SPCAM_mean_detailed.nc'
-    std_file = 'SPCAM/SPCAM_std_detailed.nc'
-else:
-    nc_file = '../cbrain/SP-CAM/SPCAM_outputs_tropics.nc'
-    mean_file = '../cbrain/SP-CAM/SPCAM_mean.nc'
-    std_file = '../cbrain/SP-CAM/SPCAM_std.nc'
+mean_file = '../SPCAM/SPCAM_new_norms/SPCAM_mean.nc'
+std_file = '../SPCAM/SPCAM_new_norms/SPCAM_std.nc'
+max_file = '../SPCAM/SPCAM_new_norms/SPCAM_max.nc'
 
+# =============================================================================
+# the 'old' format combines [lat, lon, month, time] into one dimension,
+# but the 'new' format leaves all of that uncombined
+# =============================================================================
+if Config().config.use_new_data_format:
+    nc_file = '../SPCAM/SPCAM_Stephan/SPCAM_outputs_detailed.nc'
+else:
+    nc_file = '../SPCAM/SPCAM_Pierre/SPCAM_outputs_tropics.nc'
 
 # =============================================================================
 # the logdir name is long, but it beats having to look at the parameter json
